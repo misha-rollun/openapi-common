@@ -1,0 +1,108 @@
+openapi: 3.0.0
+info:
+  title: Common technical data types
+  version: 1.0.0
+servers: []
+paths: {}
+components:
+  requestBodies:
+    RollunRequest:
+      content:
+        application/vnd.rollun-request+json:
+          schema:
+            $ref: "#/components/schemas/RollunRequest"
+  responses:
+    ProblemResponse:
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/Problem"
+      description: A problem
+    RollunResponse:
+      content:
+        application/vnd.rollun+json:
+          schema:
+            $ref: "#/components/schemas/RollunResponse"
+      description: Success response
+  parameters:
+    LifecycleToken:
+      in: header
+      name: Lifecycle-Token
+      schema:
+        type: string
+  schemas:
+    RollunRequest:
+      type: object
+      properties:
+        payload:
+          nullable: true
+          description: >
+            Корисна інформація про стан ресурсу, або колекції ресурсів. Стан ресурсу описується набором полей 
+            об'єкту, або примитивом (рядок, число і т.п.).
+    RollunResponse:
+      type: object
+      required:
+        - data
+      properties:
+        metadata:
+          type: object
+          description: Метаінформація про ресурс, або колекцію ресурсів.
+        data:
+          nullable: true
+          description: >
+            Корисна інформація про стан ресурсу, або колекції ресурсів. Стан ресурсу описується набором полей 
+            об'єкту, або примитивом (рядок, число і т.п.).
+        warnings:
+          type: array
+          items:
+            $ref: "#/components/schemas/Warning"
+    Warning:
+      type: object
+      required:
+        - type
+        - title
+        - detail
+      properties:
+        type:
+          type: string
+          format: uri
+          description: Urn, що визначає тип попередження
+        title:
+          type: string
+          description: Короткий технічний підсумок типу помилки
+        detail:
+          type: string
+          description: Пояснення конкретно цього екземпляру попередження для користувача
+    Problem:
+      description: A Problem Details object (RFC 7807)
+      type: object
+      required:
+        - type
+        - title
+        - status
+        - detail
+        - instance
+      properties:
+        type:
+          type: string
+          format: uri
+          description: Urn, що визначає тип помилки
+        title:
+          type: string
+          description: Короткий технічний підсумок типу помилки
+          example: Service Unavailable
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code помилки
+          minimum: 400
+          maximum: 600
+          exclusiveMaximum: true
+          example: 503
+        detail:
+          type: string
+          description: Пояснення конкретно цього екземпляру попередження для користувача
+        instance:
+          type: string
+          format: uri
+          description: Lifecycle token
