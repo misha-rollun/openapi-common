@@ -12,12 +12,12 @@ components:
           schema:
             $ref: "#/components/schemas/RollunRequest"
   responses:
-    ProblemResponse:
+    ErrorResponse:
       content:
-        application/problem+json:
+        application/vnd.rollun-error+json:
           schema:
-            $ref: "#/components/schemas/Problem"
-      description: A problem
+            $ref: "#/components/schemas/Error"
+      description: An error
     RollunResponse:
       content:
         application/vnd.rollun+json:
@@ -52,6 +52,17 @@ components:
           description: >
             Корисна інформація про стан ресурсу, або колекції ресурсів. Стан ресурсу описується набором полей 
             об'єкту, або примитивом (рядок, число і т.п.).
+        warnings:
+          type: array
+          items:
+            $ref: "#/components/schemas/Warning"
+    Error:
+      type: object
+      required:
+        - problem
+      properties:
+        problem:
+          $ref: "#/components/schemas/Problem"
         warnings:
           type: array
           items:
